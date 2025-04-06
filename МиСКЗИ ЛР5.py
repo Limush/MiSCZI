@@ -1,14 +1,7 @@
 import random
 import sympy
+import math
 
-
-def Nod(a, b):
-    if a == 0 or b == 0:
-        return 0
-    while True:
-        a, b = b, a % b
-        if b == 0:
-            return a
 
 
 def Encrypt(text, e, n, encrypt, encrypt_text):
@@ -36,7 +29,7 @@ while True:
         n = p * q
         m = (p - 1) * (q - 1)
         e = random.randint(2, m)
-        while Nod(e, m) != 1:
+        while math.gcd(e, m) != 1:
             e = random.randint(2, m)
         d = pow(e, -1, m)
         print(f"\nДлина p = {len(bin(p))} бит, Длина q = {len(bin(q))} бит, Длина n = {len(bin(n))} бит, Длина e = {len(bin(e))} бит, Длина d = {len(bin(d))} бит\n"
