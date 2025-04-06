@@ -39,7 +39,6 @@ while True:
         while Nod(e, m) != 1:
             e = random.randint(2, m)
         d = pow(e, -1, m)
-        print(len(bin(e)))
         print(f"\nДлина p = {len(bin(p))} бит, Длина q = {len(bin(q))} бит, Длина n = {len(bin(n))} бит, Длина e = {len(bin(e))} бит, Длина d = {len(bin(d))} бит\n"
               f"\tОткрытый ключ:\n{e} {n}\n"
               f"\tЗакрытый ключ:\n{d} {n}\n")
