@@ -3,27 +3,17 @@ import sympy
 import math
 
 
-
-def Encrypt(text, e, n, encrypt, encrypt_text):
-    for i in range(len(text)):
-        encrypt_num = pow(text[i], e, n)
-        encrypt.append(encrypt_num)
-        encrypt_text.append(str(encrypt_num))
-    return encrypt, encrypt_text
-
-
-def Decrypt(encrypt, d, n, decrypt, decrypt_text):
-    for i in range(len(encrypt)):
-        decrypt_num = pow(encrypt[i], d, n)
-        decrypt.append(decrypt_num)
-        decrypt_text.append(str(decrypt_num))
-    return decrypt, decrypt_text
-
-
 alfavit = ' АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'
 while True:
     task = input('1 - Шифрование\n2 - Расшифрование\n--->')
     if task == '1':
+        def Encrypt(text, e, n, encrypt, encrypt_text):
+            for i in range(len(text)):
+                encrypt_num = pow(text[i], e, n)
+                encrypt.append(encrypt_num)
+                encrypt_text.append(str(encrypt_num))
+            return encrypt, encrypt_text
+    
         p = sympy.randprime(2 ** 1022, 2 ** 1023)
         q = sympy.randprime(2 ** 1022, 2 ** 1023)
         n = p * q
@@ -44,6 +34,13 @@ while True:
               f"\tФраза в цифрах:\n{' '.join([str(i) for i in text])}\n"
               f"\tЗашифрованная последовательность:\n{' '.join(encrypt_text)}\n")
     elif task == '2':
+        def Decrypt(encrypt, d, n, decrypt, decrypt_text):
+            for i in range(len(encrypt)):
+                decrypt_num = pow(encrypt[i], d, n)
+                decrypt.append(decrypt_num)
+                decrypt_text.append(str(decrypt_num))
+            return decrypt, decrypt_text
+    
         close_key = list(map(int, input('Введите Закрытый ключ ->').split()))
         encrypt = list(map(int, input("Введите зашифрованную последовательность ->").split()))
         decrypt, decrypt_text = Decrypt(encrypt, close_key[0], close_key[1], [], [])
