@@ -4,9 +4,9 @@ import random
 import sympy
 from tkinter import filedialog
 
+
 def calculate_file_hash(filename, algorithm='sha256', buffer_size=65536):
     hash_obj = hashlib.new(algorithm)
-
     with open(filename, 'rb') as f:
         while chunk := f.read(buffer_size):
             hash_obj.update(chunk)
@@ -43,44 +43,43 @@ def generate_key():
     while Nod(e_open_key, fi) != 1:
         e_open_key = random.randint(2, fi)
     d_close_key = pow(e_open_key, -1, fi)
-    return e_open_key, d_close_key, n
+    return hex(e_open_key), hex(d_close_key), hex(n)
 
 
 
-
+e, d, n = generate_key()
+print(f"e = {e}\n"
+      f"d = {d}\n"
+      f"n = {n}\n")
 file_path = filedialog.askopenfilename(title="Open Filename",
-                                       filetypes=(("Word Files", "*.docx"),
-                                                  ("TXT Files", "*.txt"),
+                                       filetypes=(("TXT Files", "*.txt"),
+                                                  ("Word Files", "*.docx"),
                                                   ("All Files", "*.*")))
 task = input('1 - Подписать\n2 - Проверить\n--->')
 if task == '1':
-    e, d, n = generate_key()
-    print(f"e = {e}\n"
-          f"d = {d}\n"
-          f"n = {n}\n")
-    n = int(input("Введите n ->"))
-    e = int(input("Введите открытый ключ ->"))
+    n1 = int(input("Введите n ->"), 16)
+    d_close_key = int(input("Введите закрытый ключ ->"), 16)
     hash_file_hex = int(string_to_hex(calculate_file_hash(file_path, 'sha256')))
-    S = pow(hash_file_hex, e, n)
-    print(f"hash        = {hash_file_hex}\n"
-          f"Подписанный = {S}\n")
+    S = pow(hash_file_hex, int(d_close_key), int(n1))
+    print(f"hash        = {hex(hash_file_hex)}\n"
+          f"Подписанный = {hex(S)}\n")
     with open("RSA.txt", 'a', encoding="utf-8") as file:
         file.seek(0)
         file.truncate()
         file.write(f"e           = {e}\n"
                    f"d           = {d}\n"
                    f"n           = {n}\n"
-                   f"hash        = {hash_file_hex}\n"
-                   f"Подписанный = {S}\n")
+                   f"hash        = {hex(hash_file_hex)}\n"
+                   f"Подписанный = {hex(S)}\n")
 else:
-    n = int(input("Введите n ->"))
-    d = int(input("Введите закрытый ключ ->"))
-    S = int(input("Введите Подпись ->"))
+    n = int(input("Введите n ->"), 16)
+    e_open_key = int(input("Введите открытый ключ ->"), 16)
+    S = int(input("Введите Подпись ->"), 16)
     hash_file_hex = int(string_to_hex(calculate_file_hash(file_path, 'sha256')))
-    H = pow(S, d, n)
-    print(f"hash        = {hash_file_hex}\n"
-          f"Подписанный = {S}\n"
-          f"Проверка    = {H}")
+    H = pow(S, int(e_open_key), int(n))
+    print(f"hash        = {hex(hash_file_hex)}\n"
+          f"Подписанный = {hex(S)}\n"
+          f"Проверка    = {hex(H)}")
     if H == hash_file_hex:
         print(f"Файл не изменялся\n")
     else:

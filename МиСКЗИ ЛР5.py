@@ -1,4 +1,5 @@
-import random, sympy
+import random
+import sympy
 
 
 def Nod(a, b):
@@ -11,19 +12,23 @@ def Nod(a, b):
 
 
 def generat_n():
-    p, q = sympy.randprime(2 ** 1022, 2 ** 1023), sympy.randprime(2 ** 1022, 2 ** 1023)
+    p, q = sympy.randprime(2 ** start, 2 ** (start + 1)), sympy.randprime(2 ** start, 2 ** (start + 1))
     return p, q, p * q
 
 
 alfavit = ' АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'
+start = 1022
 p, q, n = generat_n()
-while len(bin(n)) != 2048 or p == q:
+while p == q or len(bin(n)) != 2048:
     p, q, n = generat_n()
+print(hex(n))
 fi = (p - 1) * (q - 1)
 e_open_key = random.randint(2, fi)
 while Nod(e_open_key, fi) != 1:
     e_open_key = random.randint(2, fi)
 d_close_key = pow(e_open_key, -1, fi)
+print(hex(e_open_key))
+print(hex(d_close_key))
 print(f"p ({len(bin(p))} бит) = {p}\nq ({len(bin(q))} бит)  = {q}\nn ({len(bin(n))} бит)  = {n}\ne ({len(bin(e_open_key))} бит)  = {e_open_key}\nd ({len(bin(d_close_key))} бит)  = {d_close_key}")
 print(f"\tОткрытый ключ:\n{e_open_key} {n}\n\tЗакрытый ключ:\n{d_close_key} {n}\n")
 
