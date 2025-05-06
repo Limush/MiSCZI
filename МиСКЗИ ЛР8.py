@@ -12,10 +12,12 @@ def calculate_file_hash(filename, algorithm='gost34112012', buffer_size=65536):
     return hash_obj.hexdigest()
 
 
-def string_to_hex(input_string):
+def string_to_hex(input_string, task):
+    with open("ver.txt", 'r', encoding="utf-8") as file:
+        num = int(file.read()) - (1 if task == 'v' else 0)
     bytes_data = input_string.encode('utf-8')
     hex_data = bytes_data.hex()
-    return hex_data
+    return int(hex_data) * num
 
 
 def generate_p_q():
@@ -90,7 +92,7 @@ if task == '1':
     a = int(input("Введите a ->"))
     y = int(input("Введите y ->"))
     x = int(input("Введите x ->"))
-    hash_file_hex = int(string_to_hex(calculate_file_hash(file_path, 'sha256')))
+    hash_file_hex = string_to_hex(calculate_file_hash(file_path, 'sha256'), 's')
     subscribe = Subscribe(p, q, a, x, hash_file_hex)
     print(f"hash        = {hash_file_hex}\n"
           f"Подписанный = {subscribe[0]} {subscribe[1]}\n")
@@ -104,6 +106,11 @@ if task == '1':
                    f"x           = {x}\n"
                    f"hash        = {hash_file_hex}\n"
                    f"Подписанный = {subscribe[0]} {subscribe[1]}\n")
+    with open("ver.txt", 'r+', encoding="utf-8") as file:
+        num = int(file.read())
+        file.seek(0)
+        file.truncate()
+        file.write(f"{num + 1}")
 else:
     p = int(input("Введите p ->"))
     q = int(input("Введите q ->"))
@@ -111,7 +118,7 @@ else:
     y = int(input("Введите y ->"))
     r = int(input("Введите r ->"))
     s = int(input("Введите s ->"))
-    hash_file_hex = int(string_to_hex(calculate_file_hash(file_path, 'sha256')))
+    hash_file_hex = int(string_to_hex(calculate_file_hash(file_path, 'sha256'), 'v'))
     verify = Verify_the_signature(p, q, a, y, hash_file_hex, r, s)
     with open("GOST.txt", 'a', encoding="utf-8") as file:
         file.write(f"\n\n\tПроверка подписи:\n"
