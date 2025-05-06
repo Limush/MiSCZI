@@ -4,7 +4,7 @@ import sympy
 from tkinter import filedialog
 
 
-def calculate_file_hash(filename, algorithm='sha256', buffer_size=65536):
+def calculate_file_hash(filename, algorithm='gost34112012', buffer_size=65536):
     hash_obj = hashlib.new(algorithm)
     with open(filename, 'rb') as f:
         while chunk := f.read(buffer_size):
@@ -113,7 +113,15 @@ else:
     s = int(input("Введите s ->"))
     hash_file_hex = int(string_to_hex(calculate_file_hash(file_path, 'sha256')))
     verify = Verify_the_signature(p, q, a, y, hash_file_hex, r, s)
-
+    with open("GOST.txt", 'a', encoding="utf-8") as file:
+        file.write(f"\n\n\tПроверка подписи:\n"
+                   f"p           = {p}\n"
+                   f"q           = {q}\n"
+                   f"a           = {a}\n"
+                   f"y           = {y}\n"
+                   f"Подпись     = {r} {s}\n"
+                   f"hash        = {hash_file_hex}\n"
+                   f"Изменения   = {"Нет" if verify else "Да"}\n")
     if verify:
         print(f"Файл не изменялся\n")
     else:
